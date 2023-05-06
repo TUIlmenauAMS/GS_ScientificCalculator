@@ -1,0 +1,514 @@
+<html>
+<head>
+
+ <title> G.S. Scientific Calculator </title>
+
+ <script  type="text/javascript">
+
+ 
+ function Init_Rechner()
+ {
+
+  document.Rechner.reset();
+  document.Rechner.Resultat.value = 0.0;
+ }
+
+var xx;
+var yy;
+var zz;
+var xo,yo,zo;
+ 
+ function Berechne(n,x,y,z)
+ {
+   
+   xo=x;
+   yo=y;
+   zo=z;
+   xx = eval(x);
+   yy = eval(y);
+   zz = parseFloat(z);
+
+ //  if((n!=20)&&(isNaN(xx))){alert("Please enter a number in field Input x."); return;}
+
+  switch(n)
+  {
+   case "1" : ergebnis=rand();break;
+   case "2" : ergebnis=gcd(xx,yy);break;
+   case "3" : ergebnis=expon(xx,yy,zz);break;
+   case "4" : ergebnis=J(xx,yy);break;
+   case "5" : ergebnis=xx;primtst(xx);break;
+   case "6" : ergebnis=Math.pow(xx,yy);break;
+   case "7" : ergebnis=xx*yy;break;
+   case "8" : ergebnis=xx/yy;break;
+   case "9" : ergebnis=xx+yy;break;
+   case "10" : ergebnis=xx-yy;break;
+   case "11" : ergebnis=Math.log(xx);break;
+   case "12" : ergebnis=Math.exp(xx);break;
+   case "13" : ergebnis=Math.sin(xx);break;
+   case "14" : ergebnis=Math.asin(xx);break;
+   case "15" : ergebnis=Math.tan(xx);break;
+   case "16" : ergebnis=Math.atan(xx);break;
+   case "17" : ergebnis=1/xx; break;
+   case "18" : ergebnis= -xx;break;
+   case "19" : ergebnis=eval(document.Rechner.x_Wert.value); /*"x->y"*/
+          //     if(!document.Rechner.y_Wert.value) /* Leerer String, keine Eingabe*/
+                  document.Rechner.z_Wert.value =(document.Rechner.y_Wert.value); 
+          //     else /*Etwas steht im Feld */
+          //        document.Rechner.z_Wert.value =eval(document.Rechner.y_Wert.value); 
+               document.Rechner.y_Wert.value =(document.Rechner.x_Wert.value); break;
+   case "20" : ergebnis=Math.asin(1)*2; break; /*PI*/
+   case "21" : ergebnis=(xx-32)*5/9; break; /*F->C*/
+   case "22" : ergebnis= xx*9/5+32; break; /*C->F*/
+   case "23" : ergebnis=xx*1.609344; break; /* Mi->KM */
+   case "24" : ergebnis=xx/1.609344; break; /* KM->Mi */
+   case "25" : ergebnis=xx*3.785411784; break; /* Gal->L */
+   case "26" : ergebnis=xx/3.785411784; break; /* L->Gal */
+   case "27" : ergebnis=378.5411784/(xx*1.609344) ; break; /* Mi/Gal<->L/100KM */
+   case "28" : ergebnis=xx/33.8140227018; break; /* Ounce->L */
+   case "29" : ergebnis=xx*33.8140227018; break; /* L->Ounce */
+   case "30" : ergebnis =document.Rechner.y_Wert.value; 
+               document.Rechner.y_Wert.value =document.Rechner.z_Wert.value; break; /* drop x*/
+   case "31" : ergebnis=xx*0.45359237; break; /* LB->Kg */   
+   case "32" : ergebnis=xx/0.45359237; break; /* Kg->LB */ 
+
+   default: alert("Irgendwas stimmt hier nicht!");break;
+  }
+  document.Rechner.x_Wert.value = ergebnis;
+  /*primtst(xx);*/
+ }
+
+function Enter() {
+ /* x->y button */
+     Berechne('19',       document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)
+}
+
+function primtst(B)
+{ var C, A=1, Z=1;
+  var P=1;
+  var d;
+
+  if(isNaN(B)){alert("Please enter a number in field Input x."); return;}
+
+   do
+   {   
+      d=(B-1)*rand();             
+      A=Math.ceil(d);    
+                      
+      Z=Z+1;
+      if (gcd(A,B)==1)
+      {                                     
+         C=J(A,B); if (C<0) C=B+C; 
+         if (C != expon(A,(B-1)/2, B))
+         {
+            P=0;                           
+         }
+      }
+      else P=0;
+
+   }
+   while( (P!=0) && (Z<=100));
+   if(P==1) alert(" Almost certain prime number (prob. 1-2^-100) ");
+   else alert("Not a prime number");
+
+   return P;     /*P==1: Fast sicher Primzahl, P==0: Sicher keine Primzahl*/
+
+}
+ 
+
+function J(A,B)
+{
+var C;
+
+if (A==1) return 1;
+   else
+   {
+      if (A % 2 ==0)
+      {
+         C= Math.pow(-1, (B*B-1)/8) * J(A/2,B); 
+         return C;
+      }
+      else
+      {
+         C= Math.pow(-1, ((A-1)*(B-1)/4)) * J(B % A,A); 
+         return C;
+      }
+   }
+
+   
+}
+
+
+function expon(A,E,B)
+{
+
+var C;
+var resultat;
+
+   if (E==0) return 1;
+   else
+   {
+      if (E % 2 ==0) 
+      {      
+         C=expon(A,E/2,B); 
+         resultat= (C*C) % B;
+         return resultat;
+      }
+      else 
+      {            
+          C=expon(A,(E-1)/2,B); 
+          resultat= (C*C % B)*A % B;
+          return resultat;
+      }
+   } 
+}
+
+
+
+function gcd(A,B)
+{
+
+var C;
+
+while (A % B != 0) 
+{
+   C=A % B;
+   A=B; B= C;
+  
+}
+return B;
+}
+
+
+var jran=2;
+function rand()
+{
+
+var im = 259200, ia=7141,
+         ic=54773;
+var Ergebnis;
+      
+jran=(jran*ia+ic)%im;
+Ergebnis=(jran/im);
+return Ergebnis;
+}
+
+
+
+
+ </script>
+</head>
+
+
+<body bgcolor="#AAFFCC">
+<!-- #53A78C -->
+
+
+<form name="Rechner" action="" onsubmit="Enter();return false;">
+
+  Input z-Value:&nbsp&nbsp<input type=text name="z_Wert" size=80><br>
+  Input y-Value:&nbsp&nbsp<input type=text name="y_Wert" size=80><br>
+  Input x/Output:&nbsp&nbsp<input type=text name="x_Wert" size=80><br>
+
+ <br>
+
+<input type=button value="Reset" 
+        onclick=Init_Rechner()>
+
+<input type=button value="Undo" 
+        onclick="document.Rechner.x_Wert.value=xo; 
+                 document.Rechner.y_Wert.value=yo;
+                 document.Rechner.z_Wert.value=zo;">
+
+<input type="submit" value="Enter(Return Key)">
+
+<input type=button value="Drop x" 
+               onclick="Berechne('30',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="x+y" 
+        onclick="Berechne('9',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+<input type=button value="x-y" 
+        onclick="Berechne('10',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="x*y" 
+        onclick="Berechne('7',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="x/y" 
+        onclick="Berechne('8',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="x^y" 
+        onclick="Berechne('6',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="-x" 
+        onclick="Berechne('18',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="1/x" 
+        onclick="Berechne('17',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+
+<input type=button value="ln(x)" 
+        onclick="Berechne('11',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+<input type=button value="exp(x)" 
+        onclick="Berechne('12',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="PI" 
+        onclick="Berechne('20',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="sin(x)" 
+        onclick="Berechne('13',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="asin(x)" 
+        onclick="Berechne('14',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="tan(x)" 
+        onclick="Berechne('15',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="atan(x)" 
+        onclick="Berechne('16',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+
+ <input type=button value="rand" 
+        onclick="Berechne('1',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+ <input type=button value="Greatest Common Divider (GCD) " 
+        onclick="Berechne('2',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+ <input type=button value="x^y mod z" 
+        onclick="Berechne('3',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+ <input type=button value="J(x,y,z)" 
+        onclick="Berechne('4',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="Primetest x" 
+        onclick="Berechne('5',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="F->C" 
+        onclick="Berechne('21',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="C->F" 
+        onclick="Berechne('22',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="Mi->KM" 
+        onclick="Berechne('23',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="KM->Mi" 
+        onclick="Berechne('24',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="Gal->L" 
+        onclick="Berechne('25',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="L->Gal" 
+        onclick="Berechne('26',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="Mi/Gal<->L/100KM" 
+        onclick="Berechne('27',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="Fl.Oz->L" 
+        onclick="Berechne('28',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="L->Fl.Oz" 
+        onclick="Berechne('29',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="LB->Kg" 
+        onclick="Berechne('31',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="Kg->LB" 
+        onclick="Berechne('32',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+
+<input type=button value="x->y" 
+        onclick= "Berechne('19',
+                          document.Rechner.x_Wert.value, 
+                          document.Rechner.y_Wert.value,
+                          document.Rechner.z_Wert.value)">
+
+<input type=button value="STOx" 
+        onclick= "document.cookie=document.Rechner.x_Wert.value">
+
+<input type=button value="RCLx" 
+        onclick= "document.Rechner.x_Wert.value=document.cookie">
+
+
+ <br><br>
+
+
+</form>
+A flexible scientific calculator in JavaScript for desktops and PocketPC's. The buttons redistribute according to the screen orientation. It contains a test for the primeness of a number, using modern probabilistic algorithms whos speed is independend of the magnitude of the number to be testet, hence also works to find very large prime numbers, as needed for public key encryption. <br>
+-Enter numbers or formulas,e.g. (2+3)*4 or Math.sin(3.1415/2), directly in the x,y fields (by moving the mouse on it, clicking on it, and then typing the input with the keyboard. Hence no number pad on the screen is necessary). A typed formula can contain mathematical functions, but preceded with a "Math.", for instance for sin(3.1415) it would be Math.sin(3.1415); numbers only in z. Operations also work on formulas, which are evaluated first. The output is always in the x field. Entries in the y,z fields stay in place after an operation, which can be used for chain calculations (e.g. powers of 2 with a 2 in x and y, pressing 'x*y' repeatedly). <br>
+-Button 'x->y' evaluates x and copies it to y, and beforehand shifts y to z. Hence an evaluation only (no other operations), of a typed formula in the x-field, is obtained by pressing 'x->y'. The Return Key (Enter) on the keyboard has the same function as the 'x->y' button.<br>
+-Button 'Drop x' drops (deletes) the Input x Value, shifts the y-Value to the Input x field, and copies the z-Value to the y-Value field.<br>
+-Button 'Undo' restores the last x,y,z fileds. Hence different operations on the same set of numbers can be obtained by pressing 'Undo' after each operation, or a typed formula can be calculated with different numbers after each 'Undo'. This makes it similar to a programmable calculator.<br>
+-The trigonometric functions (sin, tan...) are in Radians.<br>
+-Accuracy: About 16 digits on a laptop, 15 digits on a PocketPC (can be tested with the length of Pi).<br>
+<br>
+The functions that are available for the typed formulas are (preceded by the 'Math.', observe upper/lower case letters): <br>
+ E : 
+    Euler's constant and the base of natural logarithms, approximately 2.718. <br>
+
+LN2 : 
+    Natural logarithm of 2, approximately 0.693. <br>
+
+LN10 : 
+    Natural logarithm of 10, approximately 2.302. <br>
+
+LOG2E : 
+    Base 2 logarithm of E, approximately 1.442. <br>
+
+LOG10E : 
+    Base 10 logarithm of E, approximately 0.434. <br>
+
+PI : 
+    Ratio of the circumference of a circle to its diameter, approximately 3.14159. <br>
+
+SQRT1_2 : 
+    Square root of 1/2; equivalently, 1 over the square root of 2, approximately 0.707. <br>
+
+SQRT2 : 
+    Square root of 2, approximately 1.414. <br>
+ abs : 
+    Returns the absolute value of a number. <br>
+
+acos : 
+    Returns the arccosine (in radians) of a number. <br>
+
+asin : 
+    Returns the arcsine (in radians) of a number. <br>
+
+atan : 
+    Returns the arctangent (in radians) of a number. <br>
+
+atan2 : 
+    Returns the arctangent of the quotient of its arguments. <br>
+
+ceil : 
+    Returns the smallest integer greater than or equal to a number. <br>
+
+cos : 
+    Returns the cosine of a number. <br>
+
+exp : 
+    Returns Enumber, where number is the argument, and E is Euler's constant, the base of the natural logarithm. <br>
+
+floor : 
+    Returns the largest integer less than or equal to a number. <br>
+
+log : 
+    Returns the natural logarithm (base E) of a number. <br>
+
+max : 
+    Returns the largest of zero or more numbers. <br>
+
+min : 
+    Returns the smallest of zero or more numbers. <br>
+
+pow : 
+    Returns base to the exponent power, that is, base exponent. <br>
+
+random : 
+    Returns a pseudo-random number between 0 and 1. 
+<br>
+round : 
+    Returns the value of a number rounded to the nearest integer. <br>
+
+sin : 
+    Returns the sine of a number. <br>
+
+sqrt :
+    Returns the square root of a number. <br>
+
+tan : Returns the tangent of a number. 
+<br><br>
+Gerald Schuller, 2008-02-17
+</body>
+</html>
